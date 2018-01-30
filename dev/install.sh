@@ -5,4 +5,7 @@ BLD=$SRC/bld
 
 # perms
 chmod +x $SRC/run
-chmod +x $BLD/bld
+
+# ensure deps are installed
+# even though they are committed
+npm install

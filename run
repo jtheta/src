@@ -23,9 +23,10 @@ const args = argv
 const cmds = {
   test,
   tsn,
-  find
+  build
 }
 
+// cmd to execute
 const target = cmds[cmd]
 
 if (!target) {
@@ -99,6 +100,6 @@ async function tsn(scriptPath) {
   sh(`${path.join('node_modules', '.bin', 'ts-node')} ${scriptPath}`)
 }
 
-async function find(pattern) {
-  console.log(pattern)
+async function build() {
+  tsn(path.join(BLD, 'bld.ts'))
 }

@@ -42,11 +42,12 @@ Here's a brief description of the files and folders.
 - [/cmp/.../lib](#lib)
 - [/cmp/.../test](#test)
 - [/dev](#velox-ui)
+- [/run](#run)
 
 ## bld
 
  - Contains repo wide build scripts
- - Build the entire platform with `./bld/b.sh`
+ - Build the entire platform with `./bld/bld`
  - Uses `idx.yml` as an index for what to build
 
 ### cmp
@@ -89,3 +90,11 @@ Here's a brief description of the files and folders.
  - `description` - For docs (markdown)
  - `alias` - Resolved to the entire component path during build
  - `config` - Object containing arbitrary config
+
+### run
+
+ Execute scripts by repo wide name (similar to `npm run`, but without the baggage).
+
+ ```sh
+ ./run build
+ ```

@@ -1,0 +1,27 @@
+{
+  "name": "jtheta",
+  "version": "0.0.0",
+  "description": "This README is for contributors to the `jtheta` platform. User documentation is coming soon.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./build/test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jtheta/src.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jtheta/src/issues"
+  },
+  "homepage": "https://github.com/jtheta/src#readme",
+  "devDependencies": {
+    "tsc-node": "0.0.3"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "fs-extra": "^5.0.0",
+    "ts-node": "^4.1.0"
+  }
+}

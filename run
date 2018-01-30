@@ -1,0 +1,104 @@
+#!/usr/bin/env node
+
+// bluebird for parallel file loading
+const Promise = require('bluebird')
+const path = require('path')
+const {spawn} = require("child_process")
+const fs = require('fs-extra')
+
+// repo directories
+const ROOT = __dirname
+const BLD = path.join(ROOT, 'bld')
+const CMP = path.join(ROOT, 'cmp')
+const DEV = path.join(ROOT, 'dev')
+
+// parse the arguments to the `run` script itself
+const argv = process.argv
+const exe  = argv.shift()
+const runPath = argv.shift()
+const cmd = argv.shift()
+const args = argv
+
+// this is similar to package.json scripts object
+const cmds = {
+  test,
+  tsn,
+  find
+}
+
+const target = cmds[cmd]
+
+if (!target) {
+  console.error(`could not find script ${cmd}`)
+}
+
+switch (typeof target) {
+  case 'string':
+    sh(target)
+    break
+  case 'function':
+    target(...args).catch(console.error)
+    break
+}
+
+// execute shell
+async function sh(script, env = {}) {
+  const args = script.split(/\s+/)
+  const cmd = args.shift().trim()
+  return spawn(cmd, args, {
+    stdio: 'inherit',
+    env: {
+      ...process.env, ...env
+    }
+  })
+}
+
+// list all platform components
+async function listComponents() {
+  const files = await fs.readdir(CMP)
+  const result = []
+  for (let file of files) {
+    const cPath = path.join(CMP, file)
+    const stat = await fs.stat(cPath)
+    if (stat.isDirectory()) {
+      result.push(file)
+    }
+  }
+  return result
+}
+
+// the `test` script
+// run all tests in parellel
+async function test() {
+  const cmps = await listComponents()
+  let tests = []
+
+  for (let comp of cmps) {
+    const paths = {
+      api: path.join(CMP, comp, 'api', 'test.ts'),
+      ui: path.join(CMP, comp, 'ui', 'test.ts'),
+      lib: path.join(CMP, comp, 'lib', 'test.ts')
+    }
+    const exists = await Promise.props({
+      api: fs.exists(paths.api),
+      ui: fs.exists(paths.ui),
+      lib: fs.exists(paths.lib)
+    })
+    for (let [key, ex] of Object.entries(exists)) {
+      if (ex) {
+        tests.push(tsn(paths[key]))
+      }
+    }
+  }
+  console.log(`found ${tests.length} tests...`)
+
+  return Promise.all(tests)
+}
+
+async function tsn(scriptPath) {
+  sh(`${path.join('node_modules', '.bin', 'ts-node')} ${scriptPath}`)
+}
+
+async function find(pattern) {
+  console.log(pattern)
+}

@@ -125,7 +125,9 @@ async function test() {
 }
 
 async function tsn(scriptPath) {
-  sh(`${path.join('node_modules', '.bin', 'ts-node')} ${scriptPath}`)
+  const tsPath = path.join('node_modules', '.bin', 'ts-node')
+  const tstPath = path.join('tsconfig-paths', 'register')
+  sh(`${tsPath} -r ${tstPath} ${scriptPath}`)
 }
 
 async function build() {

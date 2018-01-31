@@ -18,7 +18,8 @@
   "homepage": "https://github.com/jtheta/src#readme",
   "devDependencies": {
     "glob": "^7.1.2",
-    "tsc-node": "0.0.3"
+    "tsc-node": "0.0.3",
+    "tsconfig-paths": "^3.1.1"
   },
   "dependencies": {
     "bluebird": "^3.5.1",

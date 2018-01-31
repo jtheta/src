@@ -3,6 +3,7 @@
 // bluebird for parallel file loading
 const Promise = require('bluebird')
 const path = require('path')
+const glob = Promise.promisify(require('glob'))
 const {spawn} = require("child_process")
 const fs = require('fs-extra')
 
@@ -23,7 +24,8 @@ const args = argv
 const cmds = {
   test,
   tsn,
-  build
+  build,
+  find
 }
 
 // cmd to execute
@@ -52,6 +54,32 @@ async function sh(script, env = {}) {
       ...process.env, ...env
     }
   })
+}
+
+// find component files
+// uses https://github.com/isaacs/node-glob
+// ex. find('*.yml') => all config files
+async function find(target, scope = 'global') {
+  const cmps = await listComponents()
+  let promises = []
+  for (let comp of cmps) {
+    const dir = path.join(CMP, comp)
+
+    promises.push(
+        glob(path.join('.', target), {cwd: dir})
+          .then(matched => matched.map(p => ({
+            path: path.join(comp, p),
+            comp,
+            dir
+          })
+        )
+      )
+    )
+  }
+
+  const results = await Promise.all(promises)
+
+  console.log(results)
 }
 
 // list all platform components

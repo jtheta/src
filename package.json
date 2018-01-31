@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/jtheta/src#readme",
   "devDependencies": {
+    "glob": "^7.1.2",
     "tsc-node": "0.0.3"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-import { assert } from './assert';
+import { assert } from '@jtheta/assert';
 import { Character } from './character';
 import { ErrorHandler } from './error-handler';
 import { Messages } from './messages';

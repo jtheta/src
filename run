@@ -51,7 +51,9 @@ async function sh(script, env = {}) {
   return spawn(cmd, args, {
     stdio: 'inherit',
     env: {
-      ...process.env, ...env
+      ...process.env,
+      ...env,
+      PLATFORM_DIR: __dirname
     }
   })
 }
@@ -127,7 +129,7 @@ async function test() {
 async function tsn(scriptPath) {
   const tsPath = path.join('node_modules', '.bin', 'ts-node')
   const tstPath = path.join('tsconfig-paths', 'register')
-  sh(`${tsPath} -r ${tstPath} ${scriptPath}`)
+  sh(`${tsPath} -r ${tstPath} ${scriptPath}`, { TS_NODE_CACHE: true})
 }
 
 async function build() {

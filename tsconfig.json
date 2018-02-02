@@ -2,7 +2,9 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-    }
+      "@jtheta/test": ["./dev/test/index"]
+    },
+    "target": "es2017"
   },
   "includes": "**/*.ts",
   "exclude": [

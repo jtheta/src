@@ -5,6 +5,7 @@ export default {
   key: str => colors.cyan(str),
   val: str => colors.cyan.bold(str),
   err: str => colors.red(str),
+  fail: str => colors.red(str),
   warn: str => colors.yellow(str),
   info: str => colors.inverse(str),
   title: str => colors.cyan.bold(str),

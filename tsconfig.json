@@ -3,7 +3,7 @@
     "baseUrl": "./",
     "paths": {
       "@jtheta/test": ["./dev/test/index"],
-      "@jtheta/assert": ["./dev/assert/index"],
+      "@jtheta/assert": ["./dev/assert/index"]
     },
     "target": "es2017"
   },

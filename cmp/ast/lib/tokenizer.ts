@@ -93,7 +93,7 @@ class Reader {
 
 /* tslint:disable:max-classes-per-file */
 
-interface Config {
+export interface Config {
     tolerant?: boolean;
     comment?: boolean;
     range?: boolean;
@@ -108,15 +108,15 @@ export class Tokenizer {
     readonly buffer: BufferEntry[];
     readonly reader: Reader;
 
-    constructor(code: string, config: Config) {
+    constructor(code: string, config: Config = {}) {
         this.errorHandler = new ErrorHandler();
-        this.errorHandler.tolerant = config ? (typeof config.tolerant === 'boolean' && config.tolerant) : false;
+        this.errorHandler.tolerant = config.tolerant || false
 
         this.scanner = new Scanner(code, this.errorHandler);
-        this.scanner.trackComment = config ? (typeof config.comment === 'boolean' && config.comment) : false;
+        this.scanner.trackComment = config.comment || false
 
-        this.trackRange = config ? (typeof config.range === 'boolean' && config.range) : false;
-        this.trackLoc = config ? (typeof config.loc === 'boolean' && config.loc) : false;
+        this.trackRange = config.range || false
+        this.trackLoc = config.loc || false
         this.buffer = [];
         this.reader = new Reader();
     }

@@ -68,10 +68,11 @@ Here's a brief description of the files and folders.
 ### test
 
  - All component related tests
+ - Tests should be in `test/api.test.ts` and `test/lib/*`
 
 ### lib
 
- - All component source
+ - All component internal/private source
 
 ### api
 

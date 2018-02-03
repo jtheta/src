@@ -40,7 +40,8 @@ switch (typeof target) {
     sh(target)
     break
   case 'function':
-    target(...args).catch(console.error)
+    target(...args)
+      .catch(console.error)
     break
 }
 
@@ -70,7 +71,7 @@ async function find(target, scope = 'global') {
     promises.push(
         glob(path.join('.', target), {cwd: dir})
           .then(matched => matched.map(p => ({
-            path: path.join(comp, p),
+            path: path.join(dir, p),
             comp,
             dir
           })
@@ -80,8 +81,14 @@ async function find(target, scope = 'global') {
   }
 
   const results = await Promise.all(promises)
+  const flat = []
+  for (let cmp of results) {
+    for (let f of cmp) {
+      flat.push(f)
+    }
+  }
 
-  console.log(results)
+  return flat
 }
 
 // list all platform components
@@ -101,35 +108,18 @@ async function listComponents() {
 // the `test` script
 // run all tests in parellel
 async function test() {
-  const cmps = await listComponents()
-  let tests = []
-
-  for (let comp of cmps) {
-    const paths = {
-      api: path.join(CMP, comp, 'api', 'test.ts'),
-      ui: path.join(CMP, comp, 'ui', 'test.ts'),
-      lib: path.join(CMP, comp, 'lib', 'test.ts')
-    }
-    const exists = await Promise.props({
-      api: fs.exists(paths.api),
-      ui: fs.exists(paths.ui),
-      lib: fs.exists(paths.lib)
-    })
-    for (let [key, ex] of Object.entries(exists)) {
-      if (ex) {
-        tests.push(tsn(paths[key]))
-      }
-    }
-  }
+  const TEST_PATTERN = 'test/**/*.test.ts'
+  const tests = await find(TEST_PATTERN)
   console.log(`found ${tests.length} tests...`)
 
-  return Promise.all(tests)
+  return Promise.all(tests.map(t => tsn(t.path)))
 }
 
 async function tsn(scriptPath) {
+  scriptPath = scriptPath.replace(ROOT, '.')
   const tsPath = path.join('node_modules', '.bin', 'ts-node')
   const tstPath = path.join('tsconfig-paths', 'register')
-  sh(`${tsPath} -r ${tstPath} ${scriptPath}`, { TS_NODE_CACHE: true})
+  sh(`${tsPath} -r ${tstPath} ${scriptPath}`, {TS_NODE_CACHE: true})
 }
 
 async function build() {

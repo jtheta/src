@@ -34,4 +34,8 @@ export class Testable {
     this.tests.push({title, func})
     return this
   }
+  run() {
+    const proc = new TestProcess(this)
+    proc.exec()
+  }
 }

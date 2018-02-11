@@ -23,5 +23,4 @@ suite
     expect({value}).toEqual('a')
   })
 
-const p = new TestProcess(suite)
-p.exec()
+suite.run()

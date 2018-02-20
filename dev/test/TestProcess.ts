@@ -1,5 +1,5 @@
 import { Testable, TestCase } from "./Testable";
-import {expect, ExpectationError} from './Expectation'
+import {expect, ExpectationError, Expectation} from './Expectation'
 import { UsefulStackTrace } from 'dev/debug/UsefulStack';
 import out from 'dev/out'
 
@@ -19,9 +19,15 @@ export class TestProcess {
 
 async function execTest(testable: Testable) {
   // should be extracted into a class
-  const log = (msg: string | object) => {
-    if (typeof msg === 'object') {
-      msg = JSON.stringify(msg, null, '  ')
+  const log = (msg: any) => {
+    if (msg === undefined) {
+      msg = 'undefined'
+    }
+    if (typeof msg.inspect === 'function') {
+      msg = msg.inspect()
+    }
+    if (typeof msg !== 'string') {
+      msg = JSON.stringify(msg || undefined, null, '  ')
     }
     const lines = msg.split('\n')
 
@@ -31,11 +37,22 @@ async function execTest(testable: Testable) {
         .join('\n') + '\n'
     )
   }
-
+  
   return Promise.all(testable.tests.map(async (test: TestCase) => {
     try {
-      await test.func(expect, log)
+      let exps = []
+      function expectWrapper(target: Object): Expectation {
+        const exp = expect(target)
+        exps.push(exp)
+        return exp
+      }
+      await test.func(expectWrapper, log)
       process.stdout.write(`${out.padLeft(`${testable.parent.name}/${testable.name}`, 30)} > ${out.ok('✔')} ${out.title(test.title)}\n`)
+      for (let exp of exps) {
+        for (let msg of exp.messages) {
+          log(msg)
+        }
+      }
     } catch (e) {
       if (e instanceof ExpectationError) {
         log(`${out.fail('✖')} ${out.title(test.title)}`)

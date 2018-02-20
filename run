@@ -62,8 +62,8 @@ async function sh(script, env = {}) {
 // find component files
 // uses https://github.com/isaacs/node-glob
 // ex. find('*.yml') => all config files
-async function find(target, scope = 'global') {
-  const cmps = await listComponents()
+async function find(target, scope) {
+  const cmps = scope ? [scope] : await listComponents()
   let promises = []
   for (let comp of cmps) {
     const dir = path.join(CMP, comp)
@@ -107,9 +107,9 @@ async function listComponents() {
 
 // the `test` script
 // run all tests in parellel
-async function test() {
+async function test(comp) {
   const TEST_PATTERN = 'test/**/*.test.ts'
-  const tests = await find(TEST_PATTERN)
+  const tests = await find(TEST_PATTERN, comp)
   console.log(`found ${tests.length} tests...`)
 
   return Promise.all(tests.map(t => tsn(t.path)))

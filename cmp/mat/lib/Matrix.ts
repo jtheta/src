@@ -1,6 +1,7 @@
 import {range} from './Range'
 import Size from './Size'
 import inspectMatrix from './inspectMatrix'
+import { assert } from './assert';
 
 export default class Matrix {
   constructor(private data: Array<any>, public size: Size) {
@@ -25,42 +26,60 @@ export default class Matrix {
     return this.rows === target.rows
     && this.columns === target.columns
   }
-  elementWise(n: number | Matrix, fn: Function): Matrix {
-    if (Matrix.isMatrix(n)) {
-      let result = []
-      for (let r of range(0, this.rows)) {
-        for (let c of range(0, this.columns)) {
-          const i = idx(r, c)
-          result[i] = fn(midx(n, i), this.idx(i))
-        }
-      }
-      return new Matrix(result, this.size)
-    }
-
-    return new Matrix(this.data.map(c => fn(c, n)), this.size)
+  map(fn: (n : any) => any) {
+    return new Matrix(this.data.map(fn), this.size)
   }
-  dotMul(n: number | Matrix): Matrix {
+  elementWise(n: Matrix, fn: Function): Matrix {
+    assert(Matrix.isMatrix(n), 'n should be a Matrix')
+    assert(this.size.equals(n.size), 'size must match')
+    let result = []
+    const left = this.data
+    const right = n.data
+    for (let i = 0; i < this.size.length(); i++) {
+      result[i] = fn(left[i], right[i])
+    }
+    return new Matrix(result, this.size)
+  }
+  dotMul(n: Matrix): Matrix {
     return this.elementWise(n, (a, b) => a * b)
   }
-  dotDiv(n: number | Matrix): Matrix {
+  dotDiv(n: Matrix): Matrix {
     return this.elementWise(n, (a, b) => a / b)
   }
-  dotExp(n: number | Matrix) {
-    return this.elementWise(n, (a, b) => a ^ b)
+  exp(n: Matrix) {
+    return this.map(n => Math.exp(n))
   }
-  add(n: number | Matrix) {
+  add(n: Matrix) {
     return this.elementWise(n, (a, b) => a + b)
   }
   inspect() {
     return inspectMatrix(this)
   }
-}
-
-function midx(data: number | Matrix, idx: number) {
-  if (Matrix.isMatrix(data)) {
-    return (data as Matrix).idx(idx)
-  } else {
-    return data
+  toString() {
+    return this.inspect()
+  }
+  equals(n: Matrix) {
+    return this.elementWise(n, (a, b) => a === b ? 1 : 0)
+  }
+  toBoolean() {
+    for (let i = 0; i < this.size.length(); i++) {
+      if(this.data[i]) {
+        return true
+      }
+    }
+    return false
+  }
+  filledWith(n: number | Matrix): boolean {
+    for (let i = 0; i < this.size.length(); i++) {
+      if(n !== this.data[i]) {
+        return false
+      }
+    }
+    return true
+  }
+  toShortString() {
+    const d = this.data
+    return `[${d.join(',')}]`
   }
 }
 

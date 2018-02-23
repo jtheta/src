@@ -1,4 +1,5 @@
 import { assert } from "./assert";
+import Matrix from "./Matrix";
 
 export default class Size {
   constructor (
@@ -45,5 +46,15 @@ export default class Size {
     if (this.equals(size)) return true
     if (this.lt(size)) return true
     return false
+  }
+  toString() {
+    return `[${this.rows}, ${this.columns}]`
+  }
+  toMatrix(value: any) {
+    const data = []
+    for (let i = 0; i < this.length(); i++) {
+      data.push(value)
+    }
+    return new Matrix(data, this)
   }
 }

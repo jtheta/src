@@ -1,4 +1,6 @@
 import out from 'dev/out'
+import Matrix from 'cmp/mat/lib/Matrix'
+import Size from 'cmp/mat/lib/Size';
 
 function assert(ok, msg = 'Assertion failed') {
   if(!ok) throw new Error(msg)
@@ -87,6 +89,35 @@ export class Expectation {
     for (let [key, value] of Object.entries(shape)) {
       this.toHavePropOfType(key, value)
     }
+    return this
+  }
+  toBeMatrix(): Expectation {
+    this.assert(
+      this.value instanceof Matrix,
+      `${this._name} to be instanceof ${out.key('Matrix')}`
+    )
+    return this
+  }
+  toBeSize(size: Size | Array<any>) {
+    size = Size.fromAny(size)
+    this.assert(
+      (this.value as Matrix).size.equals(size),
+      `${this._name} to be size ${out.key(size)}`
+    )
+    return this
+  }
+  toBeMatrixOf(n: any) {
+    this.assert(
+      (this.value as Matrix).filledWith(n),
+      `${this._name} to be matrix of ${out.key(n)}\n${this.value.inspect()}`
+    )
+    return this
+  }
+  toMatrixEqual(n: Matrix) {
+    this.assert(
+      (this.value as Matrix).equals(n).toBoolean(),
+      `${this._name} to matrix equal ${out.key(n.toShortString())}`
+    )
     return this
   }
 }

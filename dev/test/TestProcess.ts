@@ -50,7 +50,7 @@ async function execTest(testable: Testable) {
       process.stdout.write(`${out.padLeft(`${testable.parent.name}/${testable.name}`, 30)} > ${out.ok('✔')} ${out.title(test.title)}\n`)
       for (let exp of exps) {
         for (let msg of exp.messages) {
-          log(msg)
+          log(`${out.ok('✔')} ${msg}`)
         }
       }
     } catch (e) {

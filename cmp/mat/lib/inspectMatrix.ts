@@ -4,7 +4,8 @@ import {range} from './Range'
 import Size from './Size'
 
 function getTerminalSize() {
-  return Size.fromObject(process.stdout)
+  const {rows = 80, columns = 80} = process.stdout
+  return Size.fromObject({rows, columns})
 }
 
 export default function inspectMatrix(matrix: Matrix) {
@@ -44,5 +45,5 @@ export default function inspectMatrix(matrix: Matrix) {
     return sizeStr
   }
 
-  return out
+  return sizeStr + '\n' + out
 }

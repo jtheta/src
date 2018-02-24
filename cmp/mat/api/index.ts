@@ -1,7 +1,9 @@
+export {default as Matrix} from '../lib/Matrix'
 import Matrix from '../lib/Matrix'
-import Size from '../lib/Size';
+import Size from '../lib/Size'
 
-export type Mish = number | boolean | Array<number> | Matrix
+
+export type Mish = Matrix | number | Array<number> | string
 export type Sish = Size | [number, number] | number
 
 export function mat(raw: Mish): Matrix {
@@ -11,7 +13,57 @@ export function mat(raw: Mish): Matrix {
   if (Array.isArray(raw)) {
     return matFromArray(raw)
   }
+  if (typeof raw === 'string') {
+    return matFromString(raw)
+  }
   return matFromArray([raw])
+}
+
+function matFromString(str: string) {
+  const chars = str.split('')
+  let rows = 1
+  let cols = 1
+  let char
+  let num = ''
+  let data: Array<number> = []
+
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charAt(i)
+    const prev = i > 0 ? char.charAt(i - 1) : null
+    if (/\d/.test(char) || char === '-') {
+      num += char
+      continue
+    }
+    if (char === ' ') {
+      // next col
+      if (rows === 1) {
+        cols++
+      }
+      if (num !== '') {
+        data.push(parseFloat(num))
+      } else if(prev && /\d/.test(prev)) {
+        data.push(0)
+      }
+      num = ''
+      continue
+    }
+    if (char === ';') {
+      rows++
+      if (num !== '') {
+        data.push(parseFloat(num))
+      } else {
+        data.push(0)
+      }
+      num = ''
+      continue
+    }
+  }
+
+  if (num) {
+    data.push(parseFloat(num))
+  }
+
+  return new Matrix(data, new Size(rows, cols))
 }
 
 function matFromArray(arr: Array<any>): Matrix {
@@ -26,13 +78,13 @@ export function zeros(size: Sish): Matrix {
   size = Size.fromAny(size)
   const length = size.length()
 
-  return matFromArrayAndSize(new Uint32Array(length), size)
+  return matFromArrayAndSize(size.toEmptyArray(), size)
 }
 
 export function ones(size: Sish): Matrix {
   size = Size.fromAny(size)
 
-  const arr = []
+  let arr: Array<any> = []
   const length = size.length()
   for (let i = 0; i < length; i++) {
     arr.push(1)
@@ -52,7 +104,7 @@ export function oneOver(data) {
 }
 
 export function neg(data: Mish): Matrix {
-  return mat(data).dotMul(mat(-1))
+  return mat(data).neg()
 }
 
 export function onePlus(data) {
@@ -66,7 +118,6 @@ export function sigmoid(z: any) {
 
 export function linspace(x1, x2, size: Sish = [1, 100]) {
   size = Size.fromAny(size)
-  let data = []
   let n = size.length()
 
   if (n < 2) {
@@ -78,7 +129,7 @@ export function linspace(x1, x2, size: Sish = [1, 100]) {
 
   n--
 
-  for (i = 0; i >= 0; i--) {
+  for (i = n; i >= 0; i--) {
     result[i] = ((i * x2) + (n - i) * x1) / n
   }
   

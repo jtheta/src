@@ -1,10 +1,6 @@
 import * as React from 'react';
 import './App.css';
 
-import {Matrix} from '@jtheta/mat'
-
-console.log(Matrix)
-
 const logo = require('./logo.svg');
 
 class App extends React.Component {

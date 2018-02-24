@@ -47,14 +47,23 @@ export default class Size {
     if (this.lt(size)) return true
     return false
   }
+  isVector() {
+    return this.rows === 1 || this.columns === 1
+  }
+  isScalar() {
+    return this.rows === 1 && this.columns === 1
+  }
   toString() {
     return `[${this.rows}, ${this.columns}]`
   }
   toMatrix(value: any) {
-    const data = []
+    const data: Array<any> = []
     for (let i = 0; i < this.length(); i++) {
       data.push(value)
     }
     return new Matrix(data, this)
+  }
+  toEmptyArray(): Array<number> {
+    return new Array(this.length()).fill(0)
   }
 }

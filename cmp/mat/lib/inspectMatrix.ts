@@ -1,21 +1,20 @@
 import Matrix from './Matrix'
-import {assert} from './assert'
 import {range} from './Range'
 import Size from './Size'
 
 function getTerminalSize() {
-  const {rows = 80, columns = 80} = process.stdout
+  const {rows = 80, columns = 80} = process.stdout || {}
   return Size.fromObject({rows, columns})
 }
 
-export default function inspectMatrix(matrix: Matrix) {
+export default function inspectMatrix(matrix: Matrix): string {
   const m = matrix
   const terminalSize = getTerminalSize()
   const maxWidth = terminalSize.columns
   const maxHeight = terminalSize.rows
-  const minWidth = this.columns * 2
-  const height = this.rows
-  const sizeStr = `${m.rows} x ${m.columns}`
+  const minWidth = m.size.columns * 2
+  const height = m.size.rows
+  const sizeStr = `${m.size.rows} x ${m.size.columns}`
   let out = ''
   let actualWidth
 
@@ -30,7 +29,7 @@ export default function inspectMatrix(matrix: Matrix) {
   for (let row of range(0, m.size.rows)) {
     for (let col of range(0, m.size.columns)) {
       out += m.at(row, col)
-      if (col < m.rows - 1) {
+      if (col < m.size.rows - 1) {
         out += ' '
       }
     }
@@ -41,9 +40,9 @@ export default function inspectMatrix(matrix: Matrix) {
       out += '\n'
     }
   }
-  if (actualWidth > maxWidth) {
-    return sizeStr
-  }
+  // if (actualWidth > maxWidth) {
+  //   return sizeStr
+  // }
 
   return sizeStr + '\n' + out
 }

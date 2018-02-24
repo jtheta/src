@@ -25,6 +25,5 @@
     "webpack",
     "jest",
     "src/setupTests.ts"
-  ],
-  "extends": "../../../tsconfig.json"
+  ]
 }

@@ -7,9 +7,6 @@ This README is for contributors to the `jtheta` platform. User documentation is 
 This is the `jtheta` source monorepo. Any and all source code should land in this repository.
 This ensures that our CI is simple. Any exceptions to the rule will be called out in the contributor documentation.
 
-All dependencies should be committed to this repository to avoid "works for me" errors. In the
-future we may use `git submodule`s to improve efficiency.
-
 ## setup
 
 Below is a copy / past-able script to run to get your dev env setup.
@@ -18,7 +15,6 @@ Below is a copy / past-able script to run to get your dev env setup.
 git clone git@github.com:jtheta/src.git
 cd src
 SETUP=./dev/install.sh
-chmod +x $SETUP
 ./$SETUP
 ```
 
@@ -36,6 +32,7 @@ Acceptance tests, e2e tests, etc should be written as a combination of these sty
 
 Here's a brief description of the files and folders.
 
+- [/app](#app)
 - [/bld](#bld)
 - [/cmp](#cmp)
 - [/cmp/.../api](#api)
@@ -44,11 +41,14 @@ Here's a brief description of the files and folders.
 - [/dev](#velox-ui)
 - [/run](#run)
 
-## bld
+### app
+
+ - Contains end user applications
+
+### bld
 
  - Contains repo wide build scripts
  - Build the entire platform with `./bld/bld`
- - Uses `idx.yml` as an index for what to build
 
 ### cmp
 
@@ -62,7 +62,7 @@ Here's a brief description of the files and folders.
 
  - Contains all development `chore` related utilities/tools.
  - The [setup script](#setup) ensures your env is ready for development.
- - This directory is removed for all distrubutioins
+ - This directory is removed for all distributions
  - `./dev/val.cfg.js` - validates all platform configuration files
 
 ### test

@@ -1,5 +1,5 @@
 {
-  "name": "debugger",
+  "name": "playground",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -87,7 +87,7 @@
     ],
     "globals": {
       "ts-jest": {
-        "tsConfigFile": "/Users/ritch/Projects/jtheta/src/dev/debugger/debugger/tsconfig.test.json"
+        "tsConfigFile": "/Users/ritch/Projects/jtheta/src/app/playground/tsconfig.test.json"
       }
     }
   },

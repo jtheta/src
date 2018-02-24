@@ -3,11 +3,16 @@
     "baseUrl": "./",
     "paths": {
       "@jtheta/test": ["./dev/test/index"],
-      "@jtheta/assert": ["./dev/assert/index"]
+      "@jtheta/assert": ["./dev/assert/index"],
+      "@jtheta/mat": ["./cmp/mat/api/index"],
+      "@jtheta/plot": ["./cmp/gfx/api/index"],
+      "react": ["./node_modules/react/index.js"]
     },
-    "target": "es2017"
+    "target": "es2017",
+    "jsx": "react",
+    "allowJs": true
   },
-  "includes": "**/*.ts",
+  "includes": ["**/*"],
   "exclude": [
     "node_modules"
   ]

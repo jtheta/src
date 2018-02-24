@@ -1,11 +1,14 @@
 #!/usr/bin/env node
+require('ts-node').register()
+require('tsconfig-paths').register()
 
 // bluebird for parallel file loading
 const Promise = require('bluebird')
 const path = require('path')
 const glob = Promise.promisify(require('glob'))
-const {spawn} = require("child_process")
 const fs = require('fs-extra')
+const sh = require('./dev/sh')
+const startDebugger = require('./dev/debugger').startDebugger
 
 // repo directories
 const ROOT = __dirname
@@ -25,7 +28,8 @@ const cmds = {
   test,
   tsn,
   build,
-  find
+  find,
+  startDebugger
 }
 
 // cmd to execute
@@ -43,20 +47,6 @@ switch (typeof target) {
     target(...args)
       .catch(console.error)
     break
-}
-
-// execute shell
-async function sh(script, env = {}) {
-  const args = script.split(/\s+/)
-  const cmd = args.shift().trim()
-  return spawn(cmd, args, {
-    stdio: 'inherit',
-    env: {
-      ...process.env,
-      ...env,
-      PLATFORM_DIR: __dirname
-    }
-  })
 }
 
 // find component files

@@ -2,12 +2,16 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@jtheta/test": ["./dev/test/index"],
       "@jtheta/assert": ["./dev/assert/index"],
       "@jtheta/mat": ["./cmp/mat/api/index"],
       "@jtheta/plot": ["./cmp/gfx/api/index"],
-      "react": ["./node_modules/react/index.js"]
+      "@internal/test": ["./dev/test/index"],
+      "@internal/out": ["./dev/out/index"],
+      "@internal/sh": ["./dev/sh/index"],
+      "@internal/build": ["./bld/index"],
+      "@internal/serve": ["./dev/serve/index"]
     },
+    "sourceMap": true,
     "target": "es2017",
     "jsx": "react",
     "allowJs": true

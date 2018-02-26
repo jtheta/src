@@ -98,6 +98,10 @@ export function exp(data: Mish) {
   return x.exp(x)
 }
 
+export function sin(data: Mish) {
+  return mat(data).sin()
+}
+
 export function oneOver(data) {
   const x = mat(data)
   return ones(x.size).dotDiv(x)

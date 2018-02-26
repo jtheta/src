@@ -82,6 +82,7 @@ suite
   .define('linspace()', 'Linearly spaced matrix')
   .test('of 1', async (expect, log) => {
     const y = linspace(1, 8, [1, 8])
+    y.
     expect({y})
       .toBeMatrix()
       // .toBeSize([1, 8])
@@ -89,4 +90,3 @@ suite
   })
 
 suite.run()
-

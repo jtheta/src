@@ -12,6 +12,8 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default
+const styledComponentsTransformer = createStyledComponentsTransformer()
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -107,7 +109,7 @@ module.exports = {
       // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
       // please link the files into your node_modules/ and let module-resolution kick in.
       // Make sure your source files are compiled, as they will not be processed in any way.
-      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson, paths.jthetaComponents]),
       new TsconfigPathsPlugin({configFile: paths.appTsConfig})
     ],
   },
@@ -117,7 +119,10 @@ module.exports = {
       // TODO: Disable require.ensure as it's not a standard language feature.
       // We are waiting for https://github.com/facebookincubator/create-react-app/issues/2176.
       // { parser: { requireEnsure: false } },
-
+      {
+        test: /\.js$/,
+        loader: 'ify-loader'
+      },
       {
         test: /\.(js|jsx|mjs)$/,
         loader: require.resolve('source-map-loader'),
@@ -150,9 +155,15 @@ module.exports = {
                 options: {
                   // disable type checker - we will use it in fork plugin
                   transpileOnly: true,
+                  getCustomTransformers: () => ({ before: [styledComponentsTransformer] })
                 },
               },
             ],
+          },
+          {
+            test: /\.css$/,
+            loader: 'style-loader!css-loader?modules',
+            include: /flexboxgrid/
           },
           // "postcss" loader applies autoprefixer to our CSS.
           // "css" loader resolves paths in CSS and adds assets as dependencies.

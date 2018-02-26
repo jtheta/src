@@ -32,6 +32,9 @@ export default class Matrix {
   sqrt(): Matrix {
     return this.map(n => Math.sqrt(n))
   }
+  sin(): Matrix {
+    return this.map(n => Math.sin(n))
+  }
   norm(): Matrix {
     return this.abs().pow(2).sum().sqrt()
   }
@@ -93,8 +96,18 @@ export default class Matrix {
 
     return new Matrix([result], new Size(1, 1))
   }
-  map(fn: (n : any) => any) {
-    return new Matrix(this.data.map(fn), this.size)
+  map(fn: (n : any) => any): Matrix {
+    return new Matrix(this.data.map((x) => {
+      const v = fn(x)
+      if (Matrix.isMatrix(v)) {
+        return v.toScalar()
+      }
+      return v
+    }), this.size)
+  }
+  private toScalar(): number {
+    assert(this.size.isScalar(), 'cannot convert non scalar sized matrix')
+    return this.data[0]
   }
   elementWise(n: Matrix, fn: Function): Matrix {
     assert(Matrix.isMatrix(n), 'n should be a Matrix')
@@ -156,7 +169,7 @@ export default class Matrix {
   neg() {
     return this.map(n => n * -1)
   }
-  toBoolean() {
+  toBoolean(): boolean {
     for (let i = 0; i < this.size.length(); i++) {
       if(this.data[i]) {
         return true

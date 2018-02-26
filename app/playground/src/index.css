@@ -1,5 +1,25 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  height: 100%;
+}
+
+#root {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+.matrixInspection {
+  text-align: center;
 }

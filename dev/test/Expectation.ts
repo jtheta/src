@@ -102,7 +102,7 @@ export class Expectation {
     size = Size.fromAny(size)
     this.assert(
       (this.value as Matrix).size.equals(size),
-      `${this._name} to be size ${out.key(size)}`
+      `${this._name} to be size ${out.key(size)} was ${out.key(this.value.size)}`
     )
     return this
   }

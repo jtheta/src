@@ -7,8 +7,7 @@ const Promise = require('bluebird')
 const path = require('path')
 const glob = Promise.promisify(require('glob'))
 const fs = require('fs-extra')
-const sh = require('./dev/sh')
-const startDebugger = require('./dev/debugger').startDebugger
+const sh = require('./dev/sh').default
 
 // repo directories
 const ROOT = __dirname
@@ -28,8 +27,7 @@ const cmds = {
   test,
   tsn,
   build,
-  find,
-  startDebugger
+  find
 }
 
 // cmd to execute

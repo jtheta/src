@@ -50,6 +50,12 @@ export default class Size {
   isVector() {
     return this.rows === 1 || this.columns === 1
   }
+  isRowVector() {
+    return this.rows === 1 && this.isVector()
+  }
+  isColumnVector() {
+    return this.columns === 1 && this.isVector()
+  }
   isScalar() {
     return this.rows === 1 && this.columns === 1
   }

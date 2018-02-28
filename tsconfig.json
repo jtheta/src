@@ -5,7 +5,7 @@
       "@jtheta/assert": ["./dev/assert/index"],
       "@jtheta/mat": ["./cmp/mat/api/index"],
       "@jtheta/plot": ["./cmp/gfx/api/index"],
-      "@internal/test": ["./dev/test/index"],
+      "@jtheta/test": ["./dev/test/index"],
       "@internal/out": ["./dev/out/index"],
       "@internal/sh": ["./dev/sh/index"],
       "@internal/build": ["./bld/index"],

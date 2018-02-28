@@ -1,6 +1,7 @@
 export {default as Matrix} from '../lib/Matrix'
 import Matrix from '../lib/Matrix'
 import Size from '../lib/Size'
+import { assert } from '@jtheta/assert';
 
 
 export type Mish = Matrix | number | Array<number> | string
@@ -102,6 +103,10 @@ export function sin(data: Mish) {
   return mat(data).sin()
 }
 
+export function cos(data: Mish) {
+  return mat(data).cos()
+}
+
 export function oneOver(data) {
   const x = mat(data)
   return ones(x.size).dotDiv(x)
@@ -138,4 +143,18 @@ export function linspace(x1, x2, size: Sish = [1, 100]) {
   }
   
   return new Matrix(result, size)
+}
+
+export function rand(size) {
+  return zeros(size).map(x => Math.random())
+}
+
+export function meshgrid(x: Matrix, y: Matrix): [Matrix, Matrix] {
+  assert(x.size.isVector(), 'x must be a vector')
+  assert(y.size.isVector(), 'y must be a vector')
+  // assert(x.size.length() === y.size.length(), 'must be equal length')
+
+  // copy the x vector for as a row
+  // copy that row y.size.length() times
+  return [x.repeatRows(y.size.length()), y.repeatColumns(x.size.length())]
 }

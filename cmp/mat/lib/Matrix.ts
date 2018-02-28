@@ -17,7 +17,10 @@ export default class Matrix {
     return target instanceof Matrix
   }
   at(row: number, column: number) {
-    return this.data[idx(row, column, this.size)]
+    const i = Matrix.idx(row, column, this.size)
+    assert(i > -1, 'cannot get negative index')
+    assert(i < this.data.length, 'index out of bounds')
+    return this.data[i]
   }
   idx(index: number) {
     return this.data[index]
@@ -34,6 +37,9 @@ export default class Matrix {
   }
   sin(): Matrix {
     return this.map(n => Math.sin(n))
+  }
+  cos(): Matrix {
+    return this.map(n => Math.cos(n))
   }
   norm(): Matrix {
     return this.abs().pow(2).sum().sqrt()
@@ -134,7 +140,7 @@ export default class Matrix {
     for (let i of range(0, a.size.rows)) {
       for (let j of range(0, b.size.columns)) {
         for (let k of range(0, b.size.columns)) {
-          let x = idx(i, j, this.size)
+          let x = Matrix.idx(i, j, this.size)
           data[x] = data[x] + a.at(i, k) * b.at(k, j)
         }
       }
@@ -177,6 +183,20 @@ export default class Matrix {
     }
     return false
   }
+  to2dArray(): Array<Array<number>> {
+    const result: any = []
+    for (let r = 0; r < this.rows; r++) {
+      const row: any = []
+      for (let c = 0; c < this.columns; c++) {
+        row.push(this.at(r, c))
+      }
+      result.push(row)
+    }
+    return result
+  }
+  toData(): Array<any> {
+    return this.data
+  }
   filledWith(n: number | Matrix): boolean {
     for (let i = 0; i < this.size.length(); i++) {
       if(n !== this.data[i]) {
@@ -189,8 +209,74 @@ export default class Matrix {
     const d = this.data
     return `[${d.join(',')}]`
   }
-}
+  concatRow(m: Matrix) {
+    assert(Matrix.isMatrix(m), 'argument must be a Matrix')
+    assert(m.size.columns === this.size.columns, 'must have the same columns')
 
-function idx(row: number, col: number, size: Size) {
-  return (row * size.columns) + col
+    const cur = this.toData()
+    const add = m.toData()
+    const combined = cur.concat(add)
+
+    const size = new Size(this.size.rows + m.size.rows, this.size.columns)
+    return new Matrix(combined, size)
+  }
+  concatColumn(m: Matrix) {
+    assert(Matrix.isMatrix(m), 'argument must be a Matrix')
+    assert(m.size.rows === this.size.rows, 'must have the same rows')
+
+    const result: any = []
+    const width = this.size.rows
+    const size = new Size(this.size.rows, this.size.columns + m.columns)
+    const length = this.size.length()
+
+    // for (let i = 0; i < size.length(); i++) {
+    //   const [row, col] = Matrix.mdx(i, size)
+    //   if (col < this.columns) {
+    //     result[i] = this.at(row, col)
+    //   } else {
+    //     result[i] = m.at(row, col - this.columns)
+    //   }
+    // }
+
+    // TODO(ritch) this shouldnt need a O(r * c) solution
+    for (let r = 0; r < size.rows; r++) {
+      for (let c = 0; c < size.columns; c++) {
+        const i = Matrix.idx(r, c, size)
+        if (c < this.columns) {
+          result[i] = this.at(r, c)
+        } else {
+          result[i] = m.at(r, c - this.columns)
+        }
+      }
+    }
+
+    return new Matrix(result, size)
+  }
+  repeatRows(rows: number): Matrix {
+    assert(this.size.isRowVector(), 'can only repeatRows of row vector')
+    let original = this
+    let m: any = this
+    while(m.size.rows < rows) {
+      m = m.concatRow(original)
+    }
+    return m
+  }
+  repeatColumns(cols: number): Matrix {
+    assert(this.size.isColumnVector(), 'can only repeatColumns of column vector')
+    let original = this
+    let m: any = this
+    while(m.size.columns < cols) {
+      m = m.concatColumn(original)
+    }
+    return m
+  }
+  static idx(row: number, col: number, size: Size) {
+    return (row * size.columns) + col
+  }
+  static mdx(i, size) {
+    const col = Math.floor(i / size.rows)
+    const row = (-col * size.rows) + i
+  
+    return [row, col]
+  }
 }

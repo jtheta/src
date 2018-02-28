@@ -16,12 +16,25 @@ export default class Inspection extends React.Component {
     const {raw} = this.props
     
     if (raw instanceof Error) {
-      console.log(raw)
       return <InspectError err={raw} />
     }
 
     if (raw && raw.plotData) {
-      return <Plot data={toPlotlyArray(raw.plotData)} />
+      if (raw.type === 'line') {
+        if (raw.plotData.x && raw.plotData.y) {
+          return <Plot layout={{autosize: true}} useResizeHandler={true} data={toPlotlyArray(raw.plotData)} />
+        } else {
+          return <InspectError err={new Error('Must include x and y for line plot')} />
+        }
+      }
+      if (raw.type === 'surface') {
+        const matrix: Matrix = raw.plotData.z as Matrix
+        return <Plot data={[{
+          z: matrix.to2dArray(),
+          type: 'surface'
+        }]} />
+      }
+      return <h1>Unable to plot!</h1>
     }
 
     const m = mat(raw)
@@ -46,7 +59,6 @@ function toPlotlyArray(data: any) {
     x.push(data.x.idx(i))
     y.push(data.y.idx(i))
   }
-  console.log(x,y)
   return [{x, y}]
 }
 
@@ -59,7 +71,7 @@ function each(m: Matrix) {
     const row: any = []
     for (let j = 0; j < m.size.columns; j++) {
       const n = m.at(i, j)
-      console.log(n)
+
       row.push((
         <Col lg key={[i,j].join('.')}>
           <div className="matrixAtValue">{n}</div>

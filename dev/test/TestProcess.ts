@@ -18,6 +18,7 @@ export class TestProcess {
 }
 
 async function execTest(testable: Testable) {
+  const LM = 30 // left margin
   // should be extracted into a class
   const log = (msg: any) => {
     if (msg === undefined) {
@@ -33,7 +34,7 @@ async function execTest(testable: Testable) {
 
     process.stdout.write(
       lines
-        .map(msg => `${out.ctx(out.padLeft(testable.name, 20))} ${out.ok('>')} ${msg}`)
+        .map(msg => `${out.ctx(out.padLeft(testable.name, LM))} ${out.ok('>')} ${msg}`)
         .join('\n') + '\n'
     )
   }
@@ -47,7 +48,7 @@ async function execTest(testable: Testable) {
         return exp
       }
       await test.func(expectWrapper, log)
-      process.stdout.write(`${out.padLeft(`${testable.parent.name}/${testable.name}`, 30)} > ${out.ok('✔')} ${out.title(test.title)}\n`)
+      process.stdout.write(`${out.padLeft(`${testable.parent.name}/${testable.name}`, LM)} > ${out.ok('✔')} ${out.title(test.title)}\n`)
       for (let exp of exps) {
         for (let msg of exp.messages) {
           log(`${out.ok('✔')} ${msg}`)

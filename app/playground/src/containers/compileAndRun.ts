@@ -7,9 +7,12 @@ export default function compileAndRun(source: string, out: any) {
     out(n)
   }
   const plot = (x: any, y: any) => {
-    out({plotData: {x, y}})
+    out({plotData: {x, y}, type: 'line'})
   }
-  const funcs = {disp, ...matFuncs}
+  const surface = (z: any) => {
+    out({plotData: {z}, type: 'surface'})
+  }
+  const funcs = {surface, disp, ...matFuncs}
 
   const template = `
     (${Object.keys(funcs).join(',')}) => {

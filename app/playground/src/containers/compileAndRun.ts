@@ -15,7 +15,7 @@ export default function compileAndRun(source: string, out: any) {
   const funcs = {surface, disp, ...matFuncs}
 
   const template = `
-    (${Object.keys(funcs).join(',')}) => {
+    async (${Object.keys(funcs).join(',')}) => {
       ${source}
     }
     `

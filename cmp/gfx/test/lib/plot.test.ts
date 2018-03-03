@@ -1,6 +1,6 @@
 import { Testable, TestProcess } from '@jtheta/test'
-import Size from '../../lib/Size';
-import Matrix from '../../lib/Matrix';
+import Size from '../../lib/Size'
+import Matrix from '../../lib/Matrix'
 const suite = new Testable('@jtheta/mat/Matrix', 'class Matrix')
 
 const m = n => new Matrix([n], new Size(1, 1))

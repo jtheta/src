@@ -26,8 +26,8 @@ export default function inspectMatrix(matrix: Matrix): string {
     out = `${m.size.rows} x ${m.size.columns}`
   }
 
-  for (let row of range(0, m.size.rows)) {
-    for (let col of range(0, m.size.columns)) {
+  for (let row = 0; row < m.size.rows; row++) {
+    for (let col = 0; col < m.size.columns; col++) {
       out += m.at(row, col)
       if (col < m.size.rows - 1) {
         out += ' '

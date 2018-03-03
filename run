@@ -5,9 +5,9 @@ require('tsconfig-paths').register()
 // bluebird for parallel file loading
 const Promise = require('bluebird')
 const path = require('path')
-const glob = Promise.promisify(require('glob'))
-const fs = require('fs-extra')
 const sh = require('./dev/sh').default
+const todos = require('./dev/todo').todos
+const find = require('./dev/find').find
 
 // repo directories
 const ROOT = __dirname
@@ -27,7 +27,8 @@ const cmds = {
   test,
   tsn,
   build,
-  find
+  find,
+  todos
 }
 
 // cmd to execute
@@ -47,51 +48,6 @@ switch (typeof target) {
     break
 }
 
-// find component files
-// uses https://github.com/isaacs/node-glob
-// ex. find('*.yml') => all config files
-async function find(target, scope) {
-  const cmps = scope ? [scope] : await listComponents()
-  let promises = []
-  for (let comp of cmps) {
-    const dir = path.join(CMP, comp)
-
-    promises.push(
-        glob(path.join('.', target), {cwd: dir})
-          .then(matched => matched.map(p => ({
-            path: path.join(dir, p),
-            comp,
-            dir
-          })
-        )
-      )
-    )
-  }
-
-  const results = await Promise.all(promises)
-  const flat = []
-  for (let cmp of results) {
-    for (let f of cmp) {
-      flat.push(f)
-    }
-  }
-
-  return flat
-}
-
-// list all platform components
-async function listComponents() {
-  const files = await fs.readdir(CMP)
-  const result = []
-  for (let file of files) {
-    const cPath = path.join(CMP, file)
-    const stat = await fs.stat(cPath)
-    if (stat.isDirectory()) {
-      result.push(file)
-    }
-  }
-  return result
-}
 
 // the `test` script
 // run all tests in parellel

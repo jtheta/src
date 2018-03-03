@@ -72,4 +72,7 @@ export default class Size {
   toEmptyArray(): Array<number> {
     return new Array(this.length()).fill(0)
   }
+  idx(row: number, col: number): number {
+    return (row * this.columns) + col
+  }
 }

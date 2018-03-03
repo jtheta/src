@@ -19,30 +19,31 @@ export default class Inspection extends React.Component {
       return <InspectError err={raw} />
     }
 
-    if (raw && raw.plotData) {
-      if (raw.type === 'line') {
-        if (raw.plotData.x && raw.plotData.y) {
-          return <Plot layout={{autosize: true}} useResizeHandler={true} data={toPlotlyArray(raw.plotData)} />
-        } else {
-          return <InspectError err={new Error('Must include x and y for line plot')} />
-        }
-      }
-      if (raw.type === 'surface') {
-        const matrix: Matrix = raw.plotData.z as Matrix
-        return <Plot data={[{
-          z: matrix.to2dArray(),
-          type: 'surface'
-        }]} />
-      }
-      return <h1>Unable to plot!</h1>
-    }
+    // if (raw && raw.plotData) {
+    //   if (raw.type === 'line') {
+    //     if (raw.plotData.x && raw.plotData.y) {
+    //       return <Plot layout={{autosize: true}} useResizeHandler={true} data={toPlotlyArray(raw.plotData)} />
+    //     } else {
+    //       return <InspectError err={new Error('Must include x and y for line plot')} />
+    //     }
+    //   }
+    //   if (raw.type === 'surface') {
+    //     const matrix: Matrix = raw.plotData.z as Matrix
+    //     return <Plot data={[{
+    //       z: matrix.to2dArray(),
+    //       type: 'surface'
+    //     }]} />
+    //   }
+    //   return <h1>Unable to plot!</h1>
+    // }
 
-    const m = mat(raw)
+    const m = mat(raw.matrix)
 
     return (
       <Grid className="matrixInspection" fluid>
         <Row>
           <Col lg>
+            {raw.title && <h3>{raw.title}</h3>}
             <Size>{`${m.size.rows} x ${m.size.columns}`}</Size>
           </Col>
         </Row>

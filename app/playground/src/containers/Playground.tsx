@@ -3,19 +3,24 @@ declare var createPlotlyComponent: any
 
 import * as React from 'react';
 import Editor from './Editor'
-import Inspection from './Inspection'
+import InspectionPane from './InspectionPane'
+import PlotPane from './PlotPane'
 import compileAndRun from './compileAndRun'
 import Pane from '../components/Pane'
 import { Flex, Box } from 'grid-styled'
 import { Row, Col } from '../components/grid'
+import {compile, run} from '@jtheta/run'
+import {createScreen, Screen} from '@jtheta/gfx'
 
 export default class Container extends React.Component {
 
   constructor(props: any) {
     super(props)
     this.state = {
-      lastOutput: null,
-      output: []
+      screen: {
+        plots: [],
+        inspections: []
+      }
     }
   }
   state: any
@@ -27,32 +32,32 @@ export default class Container extends React.Component {
           <Editor onRun={this.handleRun.bind(this)} />
         </Pane>
         <Pane flex='1' width={1 / 2}>
-          {this.state.output.map(n => <Inspection raw={n} />)}
+          <PlotPane plots={this.state.screen.plots} />
+          <InspectionPane inspections={this.state.screen.inspections} />
         </Pane>
       </Row>
     )
-    // return (
-    //   <Grid fluid>
-    //     <Row className="container">
-    //       <Col className="editor" lg>
-    //         <Editor onRun={this.handleRun.bind(this)} />
-    //       </Col>
-    //       <Col className="output" lg>
-    //       </Col>
-    //     </Row>
-    //   </Grid>
-    // )
-  }
-  handleOutput(n: any) {
-    this.setState((state: any) => {
-      return {
-        output: [...state.output, n]
-      }
-    })
   }
 
   handleRun(source: string) {
-    this.setState({ output: [] })
-    compileAndRun(source, (n: any) => this.handleOutput(n))
+    this.setState({screen: {}})
+    const exe = compile(source)
+    const screen = createScreen()
+    
+    screen.update({
+      update: (type, screen: Screen) => {
+        // TODO(ritch) optimize for type
+        this.setState({
+          screen: {
+            plots: screen.plots,
+            inspections: screen.inspections
+          }
+        })
+      }
+    })
+    
+    const [exit, process] = run(exe, screen)
+    // compileAndRun(source, (n: any) => this.handleOutput(n))
   }
 }
+

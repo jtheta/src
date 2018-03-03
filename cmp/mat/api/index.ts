@@ -1,9 +1,8 @@
-export {default as Matrix} from '../lib/Matrix'
 import Matrix from '../lib/Matrix'
 import Size from '../lib/Size'
-import { assert } from '@jtheta/assert';
+import { assert } from '../lib/assert';
 
-
+export {Matrix, Size}
 export type Mish = Matrix | number | Array<number> | string
 export type Sish = Size | [number, number] | number
 
@@ -95,8 +94,7 @@ export function ones(size: Sish): Matrix {
 }
 
 export function exp(data: Mish) {
-  const x = mat(data)
-  return x.exp(x)
+  return mat(data).exp()
 }
 
 export function sin(data: Mish) {
@@ -157,4 +155,8 @@ export function meshgrid(x: Matrix, y: Matrix): [Matrix, Matrix] {
   // copy the x vector for as a row
   // copy that row y.size.length() times
   return [x.repeatRows(y.size.length()), y.repeatColumns(x.size.length())]
+}
+
+export function matToArray(matrix: Matrix) {
+  
 }

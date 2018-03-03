@@ -17,13 +17,11 @@ export default class Matrix {
     return target instanceof Matrix
   }
   at(row: number, column: number) {
-    const i = Matrix.idx(row, column, this.size)
+    const i = this.idx(row, column)
     assert(i > -1, 'cannot get negative index')
+    if (!(i < this.data.length)) debugger
     assert(i < this.data.length, 'index out of bounds')
     return this.data[i]
-  }
-  idx(index: number) {
-    return this.data[index]
   }
   equalSize(target: Matrix) {
     return this.rows === target.rows
@@ -136,12 +134,13 @@ export default class Matrix {
     const a = this
     const size = new Size(a.size.rows, b.size.columns)
     const data = size.toEmptyArray()
+    assert(a.rows === b.columns, 'Dimensions must agree')
+
 
     for (let i of range(0, a.size.rows)) {
       for (let j of range(0, b.size.columns)) {
-        for (let k of range(0, b.size.columns)) {
-          let x = Matrix.idx(i, j, this.size)
-          data[x] = data[x] + a.at(i, k) * b.at(k, j)
+        for (let k of range(0, a.size.columns)) {
+          data[size.idx(i, j)] += (a.at(i, k) * b.at(k, j))
         }
       }
     }
@@ -154,7 +153,7 @@ export default class Matrix {
   dotDiv(n: Matrix): Matrix {
     return this.elementWise(n, (a, b) => a / b)
   }
-  exp(n: Matrix) {
+  exp() {
     return this.map(n => Math.exp(n))
   }
   add(n: Matrix) {
@@ -241,7 +240,7 @@ export default class Matrix {
     // TODO(ritch) this shouldnt need a O(r * c) solution
     for (let r = 0; r < size.rows; r++) {
       for (let c = 0; c < size.columns; c++) {
-        const i = Matrix.idx(r, c, size)
+        const i = size.idx(r, c)
         if (c < this.columns) {
           result[i] = this.at(r, c)
         } else {
@@ -270,13 +269,22 @@ export default class Matrix {
     }
     return m
   }
-  static idx(row: number, col: number, size: Size) {
-    return (row * size.columns) + col
+  idx(row: number, col: number) {
+    return this.size.idx(row, col)
   }
-  static mdx(i, size) {
-    const col = Math.floor(i / size.rows)
-    const row = (-col * size.rows) + i
+  // mdx(i, size) {
+  //   const col = Math.floor(i / size.rows)
+  //   const row = (-col * size.rows) + i
   
-    return [row, col]
+  //   return [row, col]
+  // }
+  transpose() {
+    return new TransposedMatrix(this.data, new Size(this.columns, this.rows))
+  }
+}
+
+class TransposedMatrix extends Matrix {
+  idx(row: number, col: number) {
+    return (col * this.size.rows) + row
   }
 }

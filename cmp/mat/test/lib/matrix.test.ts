@@ -42,25 +42,27 @@ suite.define('m.concatColumns()', 'Repeating columns')
 
 suite.define('idx()', 'Index for row/col')
   .test('simple', async (expect, log) => {
-    const ex = Matrix.idx(0, 0, new Size(1, 1))
+    const matrix = ones([1, 1])
+    const ex = matrix.idx(0, 0)
     expect({ex}).toEqual(0)
   })
   .test('end', async (expect, log) => {
-    const ex = Matrix.idx(9, 9, new Size(10, 10))
+    const matrix = ones([10, 10])
+    const ex = matrix.idx(9, 9, new Size(10, 10))
     expect({ex}).toEqual(99)
   })
 
-suite.define('mdx()', 'Index for row/col')
-  .test('simple', async (expect, log) => {
-    const [row, col] = Matrix.mdx(0, new Size(1, 1))
-    expect({row}).toEqual(0)
-    expect({col}).toEqual(0)
-  })
-  .test('end', async (expect, log) => {
-    const [row, col] = Matrix.mdx(99, new Size(10, 10))
-    expect({row}).toEqual(9)
-    expect({col}).toEqual(9)
-  })
+// suite.define('mdx()', 'Index for row/col')
+//   .test('simple', async (expect, log) => {
+//     const [row, col] = Matrix.mdx(0, new Size(1, 1))
+//     expect({row}).toEqual(0)
+//     expect({col}).toEqual(0)
+//   })
+//   .test('end', async (expect, log) => {
+//     const [row, col] = Matrix.mdx(99, new Size(10, 10))
+//     expect({row}).toEqual(9)
+//     expect({col}).toEqual(9)
+//   })
 
 suite.define('m.repeatColumns()', 'Repeating columns')
   .test('repeatColumns', async (expect, log) => {
@@ -73,5 +75,5 @@ suite.define('m.repeatColumns()', 'Repeating columns')
       .toBeMatrixOf(1)
   })
 
-// suite.run()
+suite.run()
 

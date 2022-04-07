@@ -5,7 +5,7 @@ import {
 } from '../api/index';
 
 const ONE_BY_ONE = [1, 1]
-const suite = new Testable('@jtheta/mat', 'Matrix Library')
+const suite = new Testable('@jtheta/ten', 'Tensor Library')
 
 suite
   .define('ten()', 'Any to Tensor')

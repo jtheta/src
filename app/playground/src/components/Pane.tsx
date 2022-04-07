@@ -13,7 +13,7 @@ const Pane = styled(Box)`
 `;
 
 export default (props: any) => (
-  <Col flex='1'>
+  <Col flex='1' style={props.style}>
     <Pane light={props.light} p={3}>{props.children}</Pane>
   </Col>
 )

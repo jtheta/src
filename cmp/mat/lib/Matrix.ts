@@ -194,7 +194,7 @@ export default class Matrix {
     return result
   }
   toData(): Array<any> {
-    return this.data
+    return Array.from(this.data)
   }
   filledWith(n: number | Matrix): boolean {
     for (let i = 0; i < this.size.length(); i++) {

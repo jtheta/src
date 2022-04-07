@@ -1,6 +1,6 @@
 import {mat, Matrix} from '@jtheta/mat'
 import Screen from './Screen'
-import { Tensor } from '@jtheta/ten';
+import { isTensor, tenToMat } from '@jtheta/ten';
 
 type TraceTypes = 'lines' | 'scatter'
 type Trace = {
@@ -11,14 +11,17 @@ type Trace = {
   type?: TraceTypes
 }
 
-type Plotable = Matrix | Tensor
+type Plotable = Matrix | any
 
 async function matFromAny(x: any): Promise<Matrix> {
   if (Matrix.isMatrix(x)) {
     return x
   }
-  if (Tensor.isTensor(x)) {
-    return x.asMatrix()
+  if (isTensor(x)) {
+    return tenToMat(x)
+  }
+  if (Array.isArray(x)) {
+    return mat(x)
   }
   throw new Error('Could not convert any to Matrix')
 }

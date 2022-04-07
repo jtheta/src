@@ -1,6 +1,6 @@
 import Plot from "./Plot";
 import {Matrix, mat} from "@jtheta/mat";
-import {Tensor} from '@jtheta/ten'
+import {isTensor, tenToMat} from '@jtheta/ten'
 import { assert } from "../../mat/lib/assert";
 
 type ScreenChangeType = 'inspection' | 'plot'
@@ -48,8 +48,8 @@ export default class Screen {
       this.handleChange('inspection', ins)
     }
 
-    if (Tensor.isTensor(matrix)) {
-      matrix = await (matrix as Tensor).asMatrix()
+    if (isTensor(matrix)) {
+      matrix = await tenToMat(matrix)
       push(matrix)
     } else {
       push(matrix)

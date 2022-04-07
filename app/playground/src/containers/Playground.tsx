@@ -31,7 +31,7 @@ export default class Container extends React.Component {
         <Pane light={true} flex='1' width={1 / 2}>
           <Editor onRun={this.handleRun.bind(this)} />
         </Pane>
-        <Pane flex='1' width={1 / 2}>
+        <Pane flex='1' width={1 / 2} style={{'overflow': 'scroll'}}>
           <PlotPane plots={this.state.screen.plots} />
           <InspectionPane inspections={this.state.screen.inspections} />
         </Pane>
